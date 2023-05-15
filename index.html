@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Expense Tracker</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@200;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1><i class="fas fa-fw fa-wallet"></i>Expense Tracker</h1>
+    <h2>Developed by Siym | Alpha Test 0.4.8</h2>
+    <div class="input-section">
+      <input type="text" id="expenseName" placeholder="Expense Name" maxlength="10" required>
+      <input type="number" id="expenseAmount" placeholder="Amount" step="any" required>
+    </div>
+    <div class="category-section">
+      <select id="expenseCategory" required>
+        <option value="" disabled selected>Select Category</option>
+        <option value="Food">Food</option>
+        <option value="Transportation">Transportation</option>
+        <option value="Entertainment">Entertainment</option>
+        <option value="Bills">Bills</option>
+        <option value="Others">Others</option>
+      </select>
+      <input type="date" id="expenseDueDate" required>
+    </div>
+    <input type="hidden" id="editIndex" value="">
+    <button id="expenseButton">Add Expense</button>
+    <div id="expenseList"></div>
+  </div>
+  <script src="script.js"></script>
+</body>
+<footer>
+	<p>Copyright &copy; Khandakar Sayeem. All Rights Reserved. 2023</p>
+</footer>
+</html>

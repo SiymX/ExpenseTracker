@@ -1,0 +1,238 @@
+body {
+    background: linear-gradient(to right, #2C3E50, #4CA1AF);
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', monospace;
+}
+
+h1 {
+    font-family: 'Lora', serif;
+    font-size: 43.3px;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #fff;
+}
+h2{
+    font-family: 'Barlow', sans-serif;
+    font-size: 16px;
+    font-weight: lighter;
+    text-align: center;
+    color: ghostwhite;
+    margin-top: auto;
+
+}
+
+.container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.input-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.input-section input{
+    font-family: Roboto, monospace;
+    font-size: small;
+    padding: 10px;
+    border: none;
+    border-bottom: 2px solid #333;
+    transition: border-bottom 0.5s;
+    background: #eee;
+    width: 379px;
+}
+
+.category-section select {
+    font-family: Roboto, monospace;
+    font-size: small;
+    padding: 10px;
+    border: none;
+    border-bottom: 2px solid #333;
+    transition: border-bottom 0.5s;
+    background: #eee;
+    width: 100%;
+}
+
+#expenseDueDate {
+    font-family: Roboto, monospace;
+    font-size: small;
+    padding: 10px;
+    border: none;
+    border-bottom: 2px solid #333;
+    transition: border-bottom 0.5s;
+    background: #eee;
+    width: 100%;
+}
+
+.input-section input:focus,
+.category-section select:focus,
+#expenseDueDate:focus {
+    border-bottom: 2px solid #777;
+    outline: none;
+}
+
+.category-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    gap: 20px;
+}
+
+button {
+    display: block;
+    margin: 10px auto;
+    padding: 10px;
+    background: #333;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+button:hover {
+    background: #777;
+}
+
+#expenseList {
+    list-style-type: none;
+    padding: 0;
+}
+
+.expense-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.expense-item .expense-details {
+    flex-grow: 1;
+}
+
+.expense-item .expense-details .expense-name {
+    font-weight: bold;
+}
+
+.expense-item .expense-buttons button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.expense-item .expense-buttons .edit-button:hover,
+.expense-item .expense-buttons .delete-button:hover {
+    color: #777;
+}
+
+
+
+.expense-card {
+    background: #eee;
+    width: 40%; 
+    height: 100px; 
+    margin: 10px;
+    padding: 20px;
+    border-radius: 5px;
+    transition: background .3s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    position: relative; 
+  }
+  
+
+
+
+.expense-card .title {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+
+.expense-card .amount {
+    font-size: 12px;
+    color: #888;
+}
+
+.expense-card .buttons {
+    position: absolute; 
+    bottom: 10px; 
+    left: 0; 
+    right: 0; 
+    display: flex;
+    justify-content: center; 
+}
+
+.expense-card .buttons button {
+    padding: 5px 8px; 
+    background: #333;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background .3s;
+    font-size: 12px;
+    
+}
+.expense-card:hover {
+    background: #ddd;
+}
+
+.expense-card button:hover {
+    background: #777;
+}
+  
+
+.expense-card button.deleting {
+    animation: neon 1s ease-in-out;
+}
+
+.expense-card.deleting {
+  animation: smokeOut 1s forwards;
+}
+@keyframes neon {
+    0%, 100% {
+        color: #333;
+        text-shadow: none;
+        box-shadow: none;
+    }
+    50% {
+        color: #ff0000;
+        text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000, 0 0 30px #ff0000;
+        box-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000, 0 0 30px #ff0000;
+    }
+}
+
+
+@keyframes smokeOut {
+    0% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+}
+footer {
+    font-family: 'Montserrat', sans-serif;
+    color:ghostwhite;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 10px 0;
+    text-align: center;
+    box-shadow: none;
+}
+
+
