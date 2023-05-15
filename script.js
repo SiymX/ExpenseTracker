@@ -83,31 +83,44 @@ window.onload = () => {
 };
 
 
-
 function deleteExpense(index, monthYear) {
-  const expenseItem = document.querySelectorAll('.expense-card')[index];
-  expenseItem.classList.add('deleting');
+  const monthExpenses = monthlyExpenses[monthYear];
+  const expenseItem = monthExpenses[index];
 
-  setTimeout(() => {
-      const monthExpenses = monthlyExpenses[monthYear];
-      const globalExpenseIndex = expenses.findIndex(expense => 
-          expense.name === monthExpenses[index].name &&
-          expense.amount === monthExpenses[index].amount &&
-          expense.category === monthExpenses[index].category &&
-          expense.dueDate === monthExpenses[index].dueDate
-      );
+  
+  const expenseCards = document.getElementsByClassName('expense-card');
+  const expenseCard = Array.from(expenseCards).find((card) => {
+    const cardTitle = card.querySelector('.title').textContent;
+    const cardAmount = card.querySelector('.amount').textContent;
+    const cardInfo = `${cardTitle} - ${cardAmount}`;
+    return cardInfo === `${expenseItem.name} - $${expenseItem.amount} - ${expenseItem.category} - ${expenseItem.dueDate}`;
+  });
+
+  if (expenseCard) {
+    
+    const deleteButton = expenseCard.querySelector('.delete-button');
+    deleteButton.classList.add('deleting');
+    expenseCard.classList.add('deleting');
+
+    
+    setTimeout(() => {
+      const globalExpenseIndex = expenses.indexOf(expenseItem);
 
       expenses.splice(globalExpenseIndex, 1);
       localStorage.setItem('expenses', JSON.stringify(expenses));
       monthExpenses.splice(index, 1);
 
       if (monthExpenses.length === 0) {
-          delete monthlyExpenses[monthYear];
+        delete monthlyExpenses[monthYear];
       }
 
       loadExpenses();
-  }, 1000); 
+    }, 1000); 
+  }
 }
+
+
+
 
 
 function editExpense(index, monthYear) {
