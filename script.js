@@ -118,7 +118,6 @@ function deleteExpense(index, monthYear) {
     }, 1000); 
   }
 }
-
 function editExpense(index, monthYear) {
   const expense = monthlyExpenses[monthYear][index];
   document.getElementById('expenseName').value = expense.name;

@@ -274,8 +274,7 @@ button:hover {
     transition: opacity 0.3s; 
   }
 
-  
-  
+
   #helpButton.clicked {
     opacity: 0.5; 
   }
