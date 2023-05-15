@@ -37,7 +37,7 @@ https://github.com/SiymX/ExpenseTracker.git
 
 
 
-# Usaage
+# Usage
 1. Fill in the expense details in the input fields:
  * Expense name: Provide a brief name for the expense.
  * Amount: Enter the expense amount.
