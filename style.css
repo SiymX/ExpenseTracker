@@ -254,16 +254,110 @@ button:hover {
     margin-top: 10px;
     color: #333;
 }
+
+
+#helpButton {
+    font-size: 30px;
+    color: #333;
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    width: 40px;
+    height: 40px;
+    background-color: #ddd;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 999;
+    transition: opacity 0.3s; 
+  }
+
   
-footer {
+  
+  #helpButton.clicked {
+    opacity: 0.5; 
+  }
+  
+  #helpButton:focus {
+    outline: none;
+  }
+  
+  .prompt {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    border-radius: 5px;
+    padding: 20px;
+    max-width: 300px;
+    width: 80%;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    animation: promptAnimation 0.5s ease-in-out;
+  }
+  
+  .prompt h3 {
+    margin-top: 0;
+  }
+  
+  .prompt p {
+    margin-bottom: 20px;
+  }
+  
+  .prompt button {
+    padding: 10px 20px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .prompt button:hover {
+    background-color: #777;
+  }
+  
+ 
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(5px);
+    z-index: 999;
+  }
+  
+  
+  @keyframes promptAnimation {
+    0% {
+      opacity: 0;
+      transform: translate(-50%, -60%);
+    }
+    100% {
+      opacity: 1;
+      transform: translate(-50%, -50%);
+    }
+  }
+  
+  
+  footer {
     font-family: 'Montserrat', sans-serif;
-    color:ghostwhite;
+    color: ghostwhite;
     bottom: 0;
     left: 0;
     width: 100%;
     padding: 10px 0;
     text-align: center;
     box-shadow: none;
-}
+  }
+  
 
 

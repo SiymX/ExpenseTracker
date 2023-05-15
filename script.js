@@ -119,10 +119,6 @@ function deleteExpense(index, monthYear) {
   }
 }
 
-
-
-
-
 function editExpense(index, monthYear) {
   const expense = monthlyExpenses[monthYear][index];
   document.getElementById('expenseName').value = expense.name;
@@ -203,4 +199,40 @@ document.getElementById('expenseButton').addEventListener('click', function(e) {
       addExpense();
   }
 });
+
+document.getElementById('helpButton').addEventListener('click', function() {
+  const prompt = document.createElement('div');
+  prompt.classList.add('prompt');
+  prompt.innerHTML = `
+    <h3>Expense Tracker Help</h3>
+    <p>Welcome to Expense Tracker! This application helps you track your expenses.</p>
+    <p>To add an expense, fill in the expense details and click the "Add Expense" button.</p>
+    <p>You can edit or delete an expense by clicking the buttons on each expense card.</p>
+    <p>The expenses lists are organized by month and year.</p>
+    <p>Thanks for using Expense Tracker!</p>
+    <button onclick="document.body.removeChild(this.parentNode); removeBlur()">Close</button>
+  `;
+  document.body.appendChild(prompt);
+  addBlur();
+
+  this.classList.add('clicked'); 
+});
+
+function addBlur() {
+  const overlay = document.createElement('div');
+  overlay.classList.add('overlay');
+  document.body.appendChild(overlay);
+}
+
+
+function removeBlur() {
+  const overlay = document.querySelector('.overlay');
+  document.body.removeChild(overlay);
+
+  document.getElementById('helpButton').classList.remove('clicked'); 
+}
+
+
+
+
 
