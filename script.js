@@ -1,5 +1,10 @@
 let expenses = JSON.parse(localStorage.getItem('expenses')) || [];
+let monthlyExpenses = {};
 
+function getMonthYear(dueDate) {
+  const date = new Date(dueDate + 'T00:00:00');
+  return date.toLocaleString('default', { month: 'long', year: 'numeric' });
+}
 
 function addExpense() {
   const expenseName = document.getElementById('expenseName').value;
@@ -7,7 +12,6 @@ function addExpense() {
   const expenseCategory = document.getElementById('expenseCategory').value;
   const expenseDueDate = document.getElementById('expenseDueDate').value;
 
- 
   const newExpense = {
     name: expenseName,
     amount: expenseAmount,
@@ -15,71 +19,115 @@ function addExpense() {
     dueDate: expenseDueDate
   };
 
-  
   expenses.push(newExpense);
-
-  
   localStorage.setItem('expenses', JSON.stringify(expenses));
 
-  
-  clearForm();
+  const monthYear = getMonthYear(expenseDueDate);
+  if (!monthlyExpenses[monthYear]) {
+    monthlyExpenses[monthYear] = [];
+  }
+  monthlyExpenses[monthYear].push(newExpense);
 
- 
+  clearForm();
   loadExpenses();
 }
-
 
 function loadExpenses() {
   const expenseList = document.getElementById('expenseList');
   expenseList.innerHTML = '';
 
- 
-  expenses.forEach((expense, index) => {
-    const expenseItem = document.createElement('div');
-    expenseItem.classList.add('expense-card');
-    expenseItem.innerHTML = `
-      <div class="title">${expense.name}</div>
-      <div class="amount">$${expense.amount} - ${expense.category} - ${expense.dueDate}</div>
-      <div class="buttons">
-        <button class="edit-button" onclick="editExpense(${index})"><i class="fas fa-pencil-alt"></i></button>
-        <button class="delete-button" onclick="deleteExpense(${index})"><i class="fas fa-trash"></i></button>
-      </div>
-    `;
-    expenseList.appendChild(expenseItem);
+  for (const monthYear in monthlyExpenses) {
+    const monthYearItem = document.createElement('div');
+    monthYearItem.classList.add('month-year-card');
+    
+    let totalExpense = 0; 
+    monthlyExpenses[monthYear].forEach((expense) => {
+      totalExpense += parseFloat(expense.amount);
+    });
+    
+    monthYearItem.innerHTML = `<div class="month-year-label">${monthYear}</div>
+                               <div class="total-expense">Total Expense: $${totalExpense.toFixed(2)}</div>`;
+    
+    const expenseContainer = document.createElement('div'); 
+    expenseContainer.classList.add('expense-container'); 
+    monthYearItem.appendChild(expenseContainer); 
+    
+    monthlyExpenses[monthYear].forEach((expense, index) => {
+      const expenseItem = document.createElement('div');
+      expenseItem.classList.add('expense-card');
+      expenseItem.innerHTML = `
+        <div class="title">${expense.name}</div>
+        <div class="amount">$${expense.amount} - ${expense.category} - ${expense.dueDate}</div>
+        <div class="buttons">
+          <button class="edit-button" onclick="editExpense(${index}, '${monthYear}')"><i class="fas fa-pencil-alt"></i></button>
+          <button class="delete-button" onclick="deleteExpense(${index}, '${monthYear}')"><i class="fas fa-trash"></i></button>
+        </div>
+      `;
+      expenseContainer.appendChild(expenseItem);
+    });
+
+    expenseList.appendChild(monthYearItem);
+  }
+}
+
+window.onload = () => {
+  expenses.forEach(expense => {
+    const monthYear = getMonthYear(expense.dueDate);
+    if (!monthlyExpenses[monthYear]) {
+      monthlyExpenses[monthYear] = [];
+    }
+    monthlyExpenses[monthYear].push(expense);
   });
-  
-  
-}
+
+  loadExpenses();
+};
 
 
-function deleteExpense(index) {
-  const expenseCard = document.getElementsByClassName('expense-card')[index];
-  const deleteButton = expenseCard.getElementsByClassName('delete-button')[0];
 
+function deleteExpense(index, monthYear) {
+  const expenseItem = document.querySelectorAll('.expense-card')[index];
+  expenseItem.classList.add('deleting');
 
-  deleteButton.classList.add('deleting');
-  expenseCard.classList.add('deleting');
-
-  
   setTimeout(() => {
-    expenses.splice(index, 1);
-    localStorage.setItem('expenses', JSON.stringify(expenses));
-    loadExpenses();
-  }, 1000);  
+      const monthExpenses = monthlyExpenses[monthYear];
+      const globalExpenseIndex = expenses.findIndex(expense => 
+          expense.name === monthExpenses[index].name &&
+          expense.amount === monthExpenses[index].amount &&
+          expense.category === monthExpenses[index].category &&
+          expense.dueDate === monthExpenses[index].dueDate
+      );
+
+      expenses.splice(globalExpenseIndex, 1);
+      localStorage.setItem('expenses', JSON.stringify(expenses));
+      monthExpenses.splice(index, 1);
+
+      if (monthExpenses.length === 0) {
+          delete monthlyExpenses[monthYear];
+      }
+
+      loadExpenses();
+  }, 1000); 
 }
 
 
-
-function editExpense(index) {
-  const expense = expenses[index];
+function editExpense(index, monthYear) {
+  const expense = monthlyExpenses[monthYear][index];
   document.getElementById('expenseName').value = expense.name;
   document.getElementById('expenseAmount').value = expense.amount;
   document.getElementById('expenseCategory').value = expense.category;
   document.getElementById('expenseDueDate').value = expense.dueDate;
   document.getElementById('expenseButton').textContent = 'Update Expense';
-  document.getElementById('expenseButton').setAttribute('data-edit-index', index);
-}
 
+  const globalExpenseIndex = expenses.findIndex(globalExpense => 
+      globalExpense.name === expense.name &&
+      globalExpense.amount === expense.amount &&
+      globalExpense.category === expense.category &&
+      globalExpense.dueDate === expense.dueDate
+  );
+
+  document.getElementById('expenseButton').dataset.editIndex = globalExpenseIndex;
+  document.getElementById('expenseButton').dataset.monthYear = monthYear;
+}
 
 function clearForm() {
   document.getElementById('expenseName').value = '';
@@ -88,44 +136,58 @@ function clearForm() {
   document.getElementById('expenseDueDate').value = '';
   document.getElementById('expenseButton').textContent = 'Add Expense';
   delete document.getElementById('expenseButton').dataset.editIndex;
+  delete document.getElementById('expenseButton').dataset.monthYear;
 }
-
 
 document.getElementById('expenseAmount').addEventListener('keypress', function(e) {
   const char = String.fromCharCode(e.which);
   const value = this.value + char;
   const regex = /^\d*\.?\d{0,2}$/;
   if (!regex.test(value)) {
-    e.preventDefault();
+      e.preventDefault();
   }
 });
 
 document.getElementById('expenseButton').addEventListener('click', function(e) {
   e.preventDefault();
   const editIndex = this.getAttribute('data-edit-index');
+  const monthYear = this.getAttribute('data-month-year');
   if (editIndex !== null) {
-    const expenseName = document.getElementById('expenseName').value;
-    const expenseAmount = document.getElementById('expenseAmount').value;
-    const expenseCategory = document.getElementById('expenseCategory').value;
-    const expenseDueDate = document.getElementById('expenseDueDate').value;
+      const expenseName = document.getElementById('expenseName').value;
+      const expenseAmount = document.getElementById('expenseAmount').value;
+      const expenseCategory = document.getElementById('expenseCategory').value;
+      const expenseDueDate = document.getElementById('expenseDueDate').value;
 
-    expenses[editIndex] = {
-      name: expenseName,
-      amount: expenseAmount,
-      category: expenseCategory,
-      dueDate: expenseDueDate
-    };
+      expenses[editIndex] = {
+          name: expenseName,
+          amount: expenseAmount,
+          category: expenseCategory,
+          dueDate: expenseDueDate
+      };
 
-    localStorage.setItem('expenses', JSON.stringify(expenses));
-    clearForm();
-    loadExpenses();
+      const updatedExpense = expenses[editIndex];
+
+      if (getMonthYear(updatedExpense.dueDate) !== monthYear) {
+          const oldMonthExpenses = monthlyExpenses[monthYear];
+          oldMonthExpenses.splice(editIndex, 1);
+          if (oldMonthExpenses.length === 0) {
+              delete monthlyExpenses[monthYear];
+          }
+
+          const newMonthYear = getMonthYear(updatedExpense.dueDate);
+          if (!monthlyExpenses[newMonthYear]) {
+              monthlyExpenses[newMonthYear] = [];
+          }
+          monthlyExpenses[newMonthYear].push(updatedExpense);
+      } else {
+          monthlyExpenses[monthYear][editIndex] = updatedExpense;
+      }
+
+      localStorage.setItem('expenses', JSON.stringify(expenses));
+      clearForm();
+      loadExpenses();
   } else {
-    
-    addExpense();
+      addExpense();
   }
 });
 
-
-window.onload = loadExpenses;
-
-   
