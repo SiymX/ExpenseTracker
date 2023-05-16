@@ -319,12 +319,12 @@ button:hover {
     cursor: pointer;
   }
   
-  .prompt button:hover {
+.prompt button:hover {
     background-color: #777;
-  }
+}
   
  
-  .overlay {
+.overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -332,10 +332,10 @@ button:hover {
     height: 100%;
     backdrop-filter: blur(5px);
     z-index: 999;
-  }
+}
   
   
-  @keyframes promptAnimation {
+@keyframes promptAnimation {
     0% {
       opacity: 0;
       transform: translate(-50%, -60%);
@@ -344,10 +344,80 @@ button:hover {
       opacity: 1;
       transform: translate(-50%, -50%);
     }
-  }
+}
+
+.search-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+    margin-bottom: 20px;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+}
+
+.search-input-section{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: flex-end;
+}
+
+.search-button-section {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: flex-end;
+}
+
+
+#searchInput {
+    font-family: Roboto, monospace;
+    font-size: small;
+    padding: 10px;
+    border: none;
+    background: #333;
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    width: 130px; 
+}
+
+
   
-  
-  footer {
+ #searchCriteria, #searchButton, #resetSearchButton {
+    font-family: Roboto, monospace;
+    font-size: small;
+    padding: 10px;
+    border: none;
+    background: #333;
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    width: 150px; 
+    
+}
+
+#searchInput, #searchCriteria {
+    border-bottom: 2px solid #333;
+    background: #eee;
+    color: #333;
+}
+
+#searchInput:focus, #searchCriteria:focus, #searchButton:focus, #resetSearchButton:focus {
+    transform: scale(1.05);
+}
+
+#searchInput:focus, #searchCriteria:focus {
+    border-bottom: 2px solid #777;
+    outline: none;
+}
+
+
+footer {
     font-family: 'Montserrat', sans-serif;
     color: ghostwhite;
     bottom: 0;
@@ -356,7 +426,7 @@ button:hover {
     padding: 10px 0;
     text-align: center;
     box-shadow: none;
-  }
+}
   
 
 

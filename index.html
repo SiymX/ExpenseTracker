@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>Expense Tracker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" type="text/css" href="style.css">
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
@@ -15,7 +16,7 @@
 <body>
   <div class="container">
     <h1><i class="fas fa-fw fa-wallet"></i>Expense Tracker</h1>
-    <h2>Developed by Siym | Alpha Test 0.5.9</h2>
+    <h2>Developed by Siym | Alpha Test 0.6.2</h2>
     <div class="input-section">
       <input type="text" id="expenseName" placeholder="Expense Name" maxlength="10" required>
       <input type="number" id="expenseAmount" placeholder="Amount" step="any" required>
@@ -37,6 +38,20 @@
     <div id="helpButton">
       <i class="fas fa-question-circle"></i>
     </div>
+    <div id="searchContainer" class="search-container">
+      <div class="search-input-section">
+        <input type="text" id="searchInput" placeholder="Search..." />
+        <select id="searchCriteria">
+          <option value="name">Name</option>
+          <option value="year">Year</option>
+          <option value="category">Category</option>
+        </select>
+      </div>
+      <div class="search-button-section">
+        <button id="searchButton" onclick="searchExpenses()">Search</button>
+        <button id="resetSearchButton" onclick="resetSearch()">Reset Search</button>
+      </div>
+  </div>       
   </div>
   <script src="script.js"></script>
 </body>

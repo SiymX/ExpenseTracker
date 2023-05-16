@@ -231,6 +231,84 @@ function removeBlur() {
   document.getElementById('helpButton').classList.remove('clicked'); 
 }
 
+function searchExpenses() {
+  const searchInput = document.getElementById('searchInput').value;
+  const searchCriteria = document.getElementById('searchCriteria').value;
+
+  const filteredExpenses = expenses.filter(expense => {
+    if (searchCriteria === 'name') {
+      return expense.name.toLowerCase().includes(searchInput.toLowerCase());
+    } else if (searchCriteria === 'year') {
+      return getMonthYear(expense.dueDate).includes(searchInput);
+    } else if (searchCriteria === 'category') {
+      return expense.category.toLowerCase().includes(searchInput.toLowerCase());
+    }
+  });
+
+  loadFilteredExpenses(filteredExpenses);
+}
+
+function loadFilteredExpenses(filteredExpenses) {
+  const expenseList = document.getElementById('expenseList');
+  expenseList.innerHTML = '';
+
+  const groupedExpenses = groupExpensesByMonthYear(filteredExpenses);
+
+  for (const monthYear in groupedExpenses) {
+    const monthYearItem = document.createElement('div');
+    monthYearItem.classList.add('month-year-card');
+    
+    let totalExpense = 0; 
+    groupedExpenses[monthYear].forEach((expense) => {
+      totalExpense += parseFloat(expense.amount);
+    });
+    
+    monthYearItem.innerHTML = `<div class="month-year-label">${monthYear}</div>
+                               <div class="total-expense">Total Expense: $${totalExpense.toFixed(2)}</div>`;
+    
+    const expenseContainer = document.createElement('div'); 
+    expenseContainer.classList.add('expense-container'); 
+    monthYearItem.appendChild(expenseContainer); 
+    
+    groupedExpenses[monthYear].forEach((expense, index) => {
+      const expenseItem = document.createElement('div');
+      expenseItem.classList.add('expense-card');
+      expenseItem.innerHTML = `
+        <div class="title">${expense.name}</div>
+        <div class="amount">$${expense.amount} - ${expense.category} - ${expense.dueDate}</div>
+        <div class="buttons">
+          <button class="edit-button" onclick="editExpense(${index}, '${monthYear}')"><i class="fas fa-pencil-alt"></i></button>
+          <button class="delete-button" onclick="deleteExpense(${index}, '${monthYear}')"><i class="fas fa-trash"></i></button>
+        </div>
+      `;
+      expenseContainer.appendChild(expenseItem);
+    });
+
+    expenseList.appendChild(monthYearItem);
+  }
+}
+
+
+function groupExpensesByMonthYear(expenses) {
+  const groupedExpenses = {};
+
+  expenses.forEach(expense => {
+    const monthYear = getMonthYear(expense.dueDate);
+    if (!groupedExpenses[monthYear]) {
+      groupedExpenses[monthYear] = [];
+    }
+    groupedExpenses[monthYear].push(expense);
+  });
+
+  return groupedExpenses;
+}
+function resetSearch() {
+  document.getElementById('searchInput').value = '';
+  loadExpenses();
+}
+
+
+
 
 
 
