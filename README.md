@@ -56,6 +56,6 @@ This application will be updated constantly with some new features and enhances 
 - Expense Categories.
 - Expense Search Feature to find expenses by year, category, etc. (IN PROGRESS)
 - Expense Sorting and Filtering.
-- Expense Export as a CSV or TXT file.
+- Expense Export as a CSV or TXT file. (IN PROGRESS)
 - Budget Tracking.
 - Graphics Overhaul.
