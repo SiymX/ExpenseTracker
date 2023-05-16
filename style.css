@@ -241,24 +241,52 @@ button:hover {
     margin-bottom: 20px;
     padding: 20px;
     border-radius: 5px;
-    transition: background .3s;
+    transition: max-height 0.3s 0.2s ease-in-out;
+    position: relative;
+    overflow: hidden;
   }
-
-.month-year-card:hover {
-    background: #888;
-}
   
-.month-year-label {
+  .month-year-card .arrow {
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    font-size: 16px;
+    color: #333;
+    transition: transform 0.3s;
+  }
+  
+  .month-year-card.expanded .arrow {
+    transform: translateY(-50%) rotate(180deg);
+  }
+  
+  .month-year-card .expense-container {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out;
+  }
+  
+  .month-year-card.expanded .expense-container {
+    max-height: 500px; 
+    transition: max-height 0.3s 0.2s ease-in-out;
+  }
+  
+  .month-year-card:hover {
+    background: #888;
+  }
+  
+  .month-year-label {
     font-size: 20px;
     font-weight: bold;
     margin-bottom: 10px;
-}
-
-.total-expense {
+  }
+  
+  .total-expense {
     font-size: 16px;
     margin-top: 10px;
     color: #333;
-}
+  }
+  
 
 
 #helpButton {
@@ -402,6 +430,7 @@ button:hover {
     transition: all 0.3s ease-in-out;
     width: 150px; 
     
+    
 }
 
 #searchInput, #searchCriteria {
@@ -431,7 +460,7 @@ button:hover {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 20px;
+    padding: 10px;
     background: #fff;
     border-radius: 2px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
@@ -449,7 +478,7 @@ button:hover {
     display: flex;
     justify-content: space-between;
     width: 100%;
-    margin-top: 20px;
+    margin-top: 10px;
 }
 
 #downloadTxt, #downloadCsv {

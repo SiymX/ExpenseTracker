@@ -39,36 +39,56 @@ function loadExpenses() {
   for (const monthYear in monthlyExpenses) {
     const monthYearItem = document.createElement('div');
     monthYearItem.classList.add('month-year-card');
-    
-    let totalExpense = 0; 
+
+    let totalExpense = 0;
     monthlyExpenses[monthYear].forEach((expense) => {
       totalExpense += parseFloat(expense.amount);
     });
-    
-    monthYearItem.innerHTML = `<div class="month-year-label">${monthYear}</div>
-                               <div class="total-expense">Total Expense: $${totalExpense.toFixed(2)}</div>`;
-    
-    const expenseContainer = document.createElement('div'); 
-    expenseContainer.classList.add('expense-container'); 
-    monthYearItem.appendChild(expenseContainer); 
-    
-    monthlyExpenses[monthYear].forEach((expense, index) => {
+
+    const monthYearLabel = document.createElement('div');
+    monthYearLabel.classList.add('month-year-label');
+    monthYearLabel.textContent = monthYear;
+    monthYearItem.appendChild(monthYearLabel);
+
+    const totalExpenseLabel = document.createElement('div');
+    totalExpenseLabel.classList.add('total-expense');
+    totalExpenseLabel.textContent = `Total Expense: $${totalExpense.toFixed(2)}`;
+    monthYearItem.appendChild(totalExpenseLabel);
+
+    const arrow = document.createElement('div');
+    arrow.classList.add('arrow');
+    arrow.innerHTML = '<i class="fas fa-chevron-down"></i>';
+    monthYearItem.appendChild(arrow);
+
+    const expenseContainer = document.createElement('div');
+    expenseContainer.classList.add('expense-container');
+
+    monthlyExpenses[monthYear].forEach((expense) => {
       const expenseItem = document.createElement('div');
       expenseItem.classList.add('expense-card');
       expenseItem.innerHTML = `
         <div class="title">${expense.name}</div>
         <div class="amount">$${expense.amount} - ${expense.category} - ${expense.dueDate}</div>
         <div class="buttons">
-          <button class="edit-button" onclick="editExpense(${index}, '${monthYear}')"><i class="fas fa-pencil-alt"></i></button>
-          <button class="delete-button" onclick="deleteExpense(${index}, '${monthYear}')"><i class="fas fa-trash"></i></button>
+          <button class="edit-button" onclick="editExpense('${expense.name}', '${expense.amount}', '${expense.category}', '${expense.dueDate}')"><i class="fas fa-pencil-alt"></i></button>
+          <button class="delete-button" onclick="deleteExpense('${expense.name}', '${expense.amount}', '${expense.category}', '${expense.dueDate}')"><i class="fas fa-trash"></i></button>
         </div>
       `;
       expenseContainer.appendChild(expenseItem);
     });
 
+    monthYearItem.appendChild(expenseContainer);
+
+    
+    monthYearItem.addEventListener('click', function () {
+      this.classList.toggle('expanded');
+    });
+
     expenseList.appendChild(monthYearItem);
   }
 }
+
+
 
 window.onload = () => {
   expenses.forEach(expense => {
@@ -233,21 +253,32 @@ function removeBlur() {
 }
 
 function searchExpenses() {
-  const searchInput = document.getElementById('searchInput').value;
+  const searchInput = document.getElementById('searchInput').value.toLowerCase();
   const searchCriteria = document.getElementById('searchCriteria').value;
 
-  const filteredExpenses = expenses.filter(expense => {
-    if (searchCriteria === 'name') {
-      return expense.name.toLowerCase().includes(searchInput.toLowerCase());
-    } else if (searchCriteria === 'year') {
-      return getMonthYear(expense.dueDate).includes(searchInput);
-    } else if (searchCriteria === 'category') {
-      return expense.category.toLowerCase().includes(searchInput.toLowerCase());
+  const expenseCards = document.getElementsByClassName('expense-card');
+  Array.from(expenseCards).forEach((card) => {
+    const cardTitle = card.querySelector('.title').textContent.toLowerCase();
+    const cardAmount = card.querySelector('.amount').textContent.toLowerCase();
+    const monthYearCard = card.closest('.month-year-card');
+
+    if (
+      cardTitle.includes(searchInput) ||
+      cardAmount.includes(searchInput) ||
+      monthYearCard.querySelector('.month-year-label').textContent.toLowerCase().includes(searchInput)
+    ) {
+      card.style.display = 'block';
+      monthYearCard.style.display = 'block';
+    } else {
+      card.style.display = 'none';
+      const expandedCards = monthYearCard.getElementsByClassName('expense-card');
+      const visibleCards = Array.from(expandedCards).some((c) => c.style.display !== 'none');
+      monthYearCard.style.display = visibleCards ? 'block' : 'none';
     }
   });
-
-  loadFilteredExpenses(filteredExpenses);
 }
+
+
 
 function loadFilteredExpenses(filteredExpenses) {
   const expenseList = document.getElementById('expenseList');
@@ -258,19 +289,18 @@ function loadFilteredExpenses(filteredExpenses) {
   for (const monthYear in groupedExpenses) {
     const monthYearItem = document.createElement('div');
     monthYearItem.classList.add('month-year-card');
-    
-    let totalExpense = 0; 
+
+    let totalExpense = 0;
     groupedExpenses[monthYear].forEach((expense) => {
       totalExpense += parseFloat(expense.amount);
     });
-    
+
     monthYearItem.innerHTML = `<div class="month-year-label">${monthYear}</div>
                                <div class="total-expense">Total Expense: $${totalExpense.toFixed(2)}</div>`;
-    
-    const expenseContainer = document.createElement('div'); 
-    expenseContainer.classList.add('expense-container'); 
-    monthYearItem.appendChild(expenseContainer); 
-    
+
+    const expenseContainer = document.createElement('div');
+    expenseContainer.classList.add('expense-container');
+
     groupedExpenses[monthYear].forEach((expense, index) => {
       const expenseItem = document.createElement('div');
       expenseItem.classList.add('expense-card');
@@ -285,9 +315,16 @@ function loadFilteredExpenses(filteredExpenses) {
       expenseContainer.appendChild(expenseItem);
     });
 
+    monthYearItem.appendChild(expenseContainer);
+
+    monthYearItem.addEventListener('click', function () {
+      this.classList.toggle('expanded');
+    });
+
     expenseList.appendChild(monthYearItem);
   }
 }
+
 
 
 function groupExpensesByMonthYear(expenses) {
