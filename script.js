@@ -36,7 +36,18 @@ function loadExpenses() {
   const expenseList = document.getElementById('expenseList');
   expenseList.innerHTML = '';
 
-  for (const monthYear in monthlyExpenses) {
+  const sortedMonths = Object.keys(monthlyExpenses).sort((a, b) => {
+    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    const [monthA, yearA] = a.split(' ');
+    const [monthB, yearB] = b.split(' ');
+
+    const monthNumberA = monthNames.indexOf(monthA);
+    const monthNumberB = monthNames.indexOf(monthB);
+
+    return new Date(yearA, monthNumberA) - new Date(yearB, monthNumberB);
+  });
+
+  sortedMonths.forEach((monthYear) => {
     const monthYearItem = document.createElement('div');
     monthYearItem.classList.add('month-year-card');
 
@@ -79,19 +90,16 @@ function loadExpenses() {
 
     monthYearItem.appendChild(expenseContainer);
 
-    
     monthYearItem.addEventListener('click', function () {
       this.classList.toggle('expanded');
     });
 
     expenseList.appendChild(monthYearItem);
-  }
+  });
 }
 
-
-
 window.onload = () => {
-  expenses.forEach(expense => {
+  expenses.forEach((expense) => {
     const monthYear = getMonthYear(expense.dueDate);
     if (!monthlyExpenses[monthYear]) {
       monthlyExpenses[monthYear] = [];
@@ -328,18 +336,25 @@ function loadFilteredExpenses(filteredExpenses) {
 
 
 function groupExpensesByMonthYear(expenses) {
-  const groupedExpenses = {};
+  let groupedExpenses = {};
+
+  expenses.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate)); // Sort expenses by date
 
   expenses.forEach(expense => {
-    const monthYear = getMonthYear(expense.dueDate);
+    let date = new Date(expense.dueDate);
+    let monthYear = `${date.getMonth() + 1}-${date.getFullYear()}`;
+
     if (!groupedExpenses[monthYear]) {
       groupedExpenses[monthYear] = [];
     }
     groupedExpenses[monthYear].push(expense);
   });
 
-  return groupedExpenses;
+  return Object.entries(groupedExpenses).map(([monthYear, expenses]) => ({ monthYear, expenses }));
 }
+
+
+
 function resetSearch() {
   document.getElementById('searchInput').value = '';
   loadExpenses();
