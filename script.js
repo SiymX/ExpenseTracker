@@ -307,6 +307,39 @@ function resetSearch() {
   loadExpenses();
 }
 
+document.getElementById("downloadTxt").addEventListener("click", function() {
+  downloadTxt(expenses);
+});
+
+document.getElementById("downloadCsv").addEventListener("click", function() {
+  downloadCsv(expenses);
+});
+
+function downloadTxt(data) {
+  let txtData = data.map(expense => `Name: ${expense.name}, Amount: ${expense.amount}, Category: ${expense.category}, Due Date: ${expense.dueDate}`).join('\n');
+  
+  let blob = new Blob([txtData], { type: 'text/plain' });
+  let url = window.URL.createObjectURL(blob);
+
+  let link = document.createElement('a');
+  link.download = 'expenses.txt';
+  link.href = url;
+  link.click();
+}
+
+function downloadCsv(data) {
+  let csvData = "Name,Amount,Category,Due Date\n" + data.map(expense => `${expense.name},${expense.amount},${expense.category},${expense.dueDate}`).join('\n');
+  
+  let blob = new Blob([csvData], { type: 'text/csv' });
+  let url = window.URL.createObjectURL(blob);
+
+  let link = document.createElement('a');
+  link.download = 'expenses.csv';
+  link.href = url;
+  link.click();
+}
+
+
 
 
 
