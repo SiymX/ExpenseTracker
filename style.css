@@ -391,7 +391,7 @@ button:hover {
   
  #searchCriteria, #searchButton, #resetSearchButton {
     font-family: Roboto, monospace;
-    font-size: small;
+    font-size: smaller;
     padding: 10px;
     margin: 0;
     border: none;

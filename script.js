@@ -316,8 +316,16 @@ document.getElementById("downloadCsv").addEventListener("click", function() {
 });
 
 function downloadTxt(data) {
-  let txtData = data.map(expense => `Name: ${expense.name}, Amount: ${expense.amount}, Category: ${expense.category}, Due Date: ${expense.dueDate}`).join('\n');
   
+  let groupedExpenses = groupExpensesByMonthYear(data);
+
+  
+  let txtData = groupedExpenses.map(group => {
+    let monthYear = group.monthYear;
+    let expenses = group.expenses.map(expense => `Name: ${expense.name}, Amount: ${expense.amount}, Category: ${expense.category}, Date: ${expense.dueDate}`).join('\n');
+    return `----------------------------------------------------------------------------------------------------------------------\nMONTH ${monthYear}\n${expenses}\n----------------------------------------------------------------------------------------------------------------------\n\n`;
+  }).join('\n');
+
   let blob = new Blob([txtData], { type: 'text/plain' });
   let url = window.URL.createObjectURL(blob);
 
@@ -328,8 +336,19 @@ function downloadTxt(data) {
 }
 
 function downloadCsv(data) {
-  let csvData = "Name,Amount,Category,Due Date\n" + data.map(expense => `${expense.name},${expense.amount},${expense.category},${expense.dueDate}`).join('\n');
   
+  let groupedExpenses = groupExpensesByMonthYear(data);
+
+  
+  let csvData = groupedExpenses.map(group => {
+    let monthYear = group.monthYear;
+    let expenses = group.expenses.map(expense => {
+      let formattedDate = new Date(expense.dueDate).toISOString().split('T')[0]; 
+      return `${expense.name},${expense.amount},${expense.category},${formattedDate}`;
+    }).join('\n');
+    return `MONTH ${monthYear}\nName,Amount,Category,Date\n${expenses}\n\n`;
+  }).join('\n');
+
   let blob = new Blob([csvData], { type: 'text/csv' });
   let url = window.URL.createObjectURL(blob);
 
@@ -338,6 +357,24 @@ function downloadCsv(data) {
   link.href = url;
   link.click();
 }
+
+
+function groupExpensesByMonthYear(expenses) {
+  let groupedExpenses = {};
+
+  expenses.forEach(expense => {
+    let date = new Date(expense.dueDate);
+    let monthYear = `${date.getMonth() + 1}-${date.getFullYear()}`;
+
+    if (!groupedExpenses[monthYear]) {
+      groupedExpenses[monthYear] = [];
+    }
+    groupedExpenses[monthYear].push(expense);
+  });
+
+  return Object.entries(groupedExpenses).map(([monthYear, expenses]) => ({ monthYear, expenses }));
+}
+
 
 
 
