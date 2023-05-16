@@ -208,6 +208,7 @@ document.getElementById('helpButton').addEventListener('click', function() {
     <p>To add an expense, fill in the expense details and click the "Add Expense" button.</p>
     <p>You can edit or delete an expense by clicking the buttons on each expense card.</p>
     <p>The expenses lists are organized by month and year.</p>
+    <p>You can also download your expenses as a TXT or a CSV (Excel Sheet) file.</p>
     <p>Thanks for using Expense Tracker!</p>
     <button onclick="document.body.removeChild(this.parentNode); removeBlur()">Close</button>
   `;
