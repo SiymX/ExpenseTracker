@@ -74,20 +74,20 @@ function loadExpenses() {
     const expenseContainer = document.createElement('div');
     expenseContainer.classList.add('expense-container');
 
-    monthlyExpenses[monthYear].forEach((expense) => {
+    monthlyExpenses[monthYear].forEach((expense, index) => {
       const expenseItem = document.createElement('div');
       expenseItem.classList.add('expense-card');
       expenseItem.innerHTML = `
         <div class="title">${expense.name}</div>
         <div class="amount">$${expense.amount} - ${expense.category} - ${expense.dueDate}</div>
         <div class="buttons">
-          <button class="edit-button" onclick="editExpense('${expense.name}', '${expense.amount}', '${expense.category}', '${expense.dueDate}')"><i class="fas fa-pencil-alt"></i></button>
-          <button class="delete-button" onclick="deleteExpense('${expense.name}', '${expense.amount}', '${expense.category}', '${expense.dueDate}')"><i class="fas fa-trash"></i></button>
+          <button class="edit-button" onclick="editExpense(${index}, '${monthYear}')"><i class="fas fa-pencil-alt"></i></button>
+          <button class="delete-button" onclick="deleteExpense(${index}, '${monthYear}')"><i class="fas fa-trash"></i></button>
         </div>
       `;
       expenseContainer.appendChild(expenseItem);
     });
-
+    
     monthYearItem.appendChild(expenseContainer);
 
     monthYearItem.addEventListener('click', function () {
@@ -110,42 +110,50 @@ window.onload = () => {
   loadExpenses();
 };
 
-
 function deleteExpense(index, monthYear) {
   const monthExpenses = monthlyExpenses[monthYear];
   const expenseItem = monthExpenses[index];
 
-  
   const expenseCards = document.getElementsByClassName('expense-card');
   const expenseCard = Array.from(expenseCards).find((card) => {
     const cardTitle = card.querySelector('.title').textContent;
     const cardAmount = card.querySelector('.amount').textContent;
     const cardInfo = `${cardTitle} - ${cardAmount}`;
-    return cardInfo === `${expenseItem.name} - $${expenseItem.amount} - ${expenseItem.category} - ${expenseItem.dueDate}`;
+    const expenseInfo = `${expenseItem.name} - $${expenseItem.amount} - ${expenseItem.category} - ${expenseItem.dueDate}`;
+    return cardInfo === expenseInfo;
   });
 
   if (expenseCard) {
-    
     const deleteButton = expenseCard.querySelector('.delete-button');
     deleteButton.classList.add('deleting');
     expenseCard.classList.add('deleting');
 
-    
     setTimeout(() => {
-      const globalExpenseIndex = expenses.indexOf(expenseItem);
-
-      expenses.splice(globalExpenseIndex, 1);
-      localStorage.setItem('expenses', JSON.stringify(expenses));
-      monthExpenses.splice(index, 1);
-
-      if (monthExpenses.length === 0) {
-        delete monthlyExpenses[monthYear];
+      const globalExpenseIndex = expenses.findIndex((expense) => (
+        expense.name === monthlyExpenses[monthYear][index].name &&
+        expense.amount === monthlyExpenses[monthYear][index].amount &&
+        expense.category === monthlyExpenses[monthYear][index].category &&
+        expense.dueDate === monthlyExpenses[monthYear][index].dueDate
+      ));
+  
+      if (globalExpenseIndex !== -1) {
+        expenses.splice(globalExpenseIndex, 1);
+        localStorage.setItem('expenses', JSON.stringify(expenses));
+        monthlyExpenses[monthYear].splice(index, 1);
+  
+        if (monthlyExpenses[monthYear].length === 0) {
+          delete monthlyExpenses[monthYear];
+        }
+  
+        loadExpenses();
       }
-
-      loadExpenses();
-    }, 1000); 
+    }, 1000);
   }
 }
+
+
+
+
 function editExpense(index, monthYear) {
   const expense = monthlyExpenses[monthYear][index];
   document.getElementById('expenseName').value = expense.name;
@@ -427,7 +435,6 @@ function groupExpensesByMonthYear(expenses) {
 
   return Object.entries(groupedExpenses).map(([monthYear, expenses]) => ({ monthYear, expenses }));
 }
-
 
 
 
