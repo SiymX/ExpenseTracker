@@ -1,6 +1,28 @@
 let expenses = JSON.parse(localStorage.getItem('expenses')) || [];
 let monthlyExpenses = {};
 
+
+const menuButton = document.getElementById('menuButton');
+const menuPrompt = document.querySelector('.menu-prompt');
+
+menuButton.addEventListener('click', () => {
+  menuPrompt.classList.toggle('show');
+});
+
+const searchOption = document.getElementById('searchOption');
+const downloadsOption = document.getElementById('downloadsOption');
+
+searchOption.addEventListener('click', () => {
+  searchExpenses();
+  menuPrompt.classList.remove('show');
+});
+
+downloadsOption.addEventListener('click', () => {
+  menuPrompt.classList.remove('show');
+  
+});
+
+
 function getMonthYear(dueDate) {
   const date = new Date(dueDate + 'T00:00:00');
   return date.toLocaleString('default', { month: 'long', year: 'numeric' });
@@ -452,7 +474,6 @@ function groupExpensesByMonthYear(expenses) {
 
   return Object.entries(groupedExpenses).map(([monthYear, expenses]) => ({ monthYear, expenses }));
 }
-
 
 
 
