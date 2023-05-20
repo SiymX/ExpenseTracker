@@ -388,7 +388,7 @@ button:hover {
     outline: none;
   }
   
-  .prompt {
+  .help-prompt {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -407,15 +407,15 @@ button:hover {
     animation: promptAnimation 0.5s ease-in-out;
   }
   
-  .prompt h3 {
+  .help-prompt h3 {
     margin-top: 0;
   }
   
-  .prompt p {
+  .help-prompt p {
     margin-bottom: 20px;
   }
   
-  .prompt button {
+  .help-prompt button {
     padding: 10px 20px;
     background-color: #333;
     color: #fff;
@@ -424,9 +424,91 @@ button:hover {
     cursor: pointer;
   }
   
-.prompt button:hover {
+  .help-promptbutton:hover {
     background-color: #777;
 }
+
+.search-prompt {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  border-radius: 5px;
+  padding: 20px;
+  max-width: 300px;
+  width: 80%;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  animation: promptAnimation 0.5s ease-in-out;
+}
+
+.search-prompt h3 {
+  margin-top: 0;
+}
+
+.search-prompt .input-section {
+  margin-bottom: 10px;
+}
+
+.search-prompt label {
+  font-size: 14px;
+  color: #fff;
+  margin-bottom: 5px;
+}
+
+.search-prompt input,
+.search-prompt select {
+  font-family: Roboto, monospace;
+  font-size: small;
+  padding: 10px;
+  border: none;
+  border-bottom: 2px solid #333;
+  transition: border-bottom 0.5s;
+  background: #eee;
+  width: 100%;
+  color: #333;
+}
+
+.search-prompt button {
+  padding: 10px 20px;
+  background-color: #333;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.search-prompt button:hover {
+  background-color: #777;
+}
+
+.search-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(5px);
+  z-index: 999;
+}
+
+@keyframes promptAnimation {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -60%);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
   
  
 .overlay {
@@ -451,65 +533,7 @@ button:hover {
     }
 }
 
-.search-container {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    margin-bottom: 20px;
-    position: fixed;
-    top: 20px;
-    right: 20px;
-}
 
-.search-input-section{
-    display: flex;
-    flex-direction: row;
-    align-items: flex-end;
-}
-
-.search-button-section {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-end;
-}
-
-
-#searchInput {
-    font-family: Roboto, monospace;
-    font-size: small;
-    padding: 10px;
-    border: none;
-    background: #333;
-    color: #fff;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: all 0.3s ease-in-out;
-    width: 130px; 
-}
-
-
-  
- #searchCriteria, #searchButton, #resetSearchButton {
-    font-family: Roboto, monospace;
-    font-size: smaller;
-    padding: 10px;
-    margin: 0;
-    border: none;
-    background: #333;
-    color: #fff;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: all 0.3s ease-in-out;
-    width: 150px; 
-    
-    
-}
-
-#searchInput, #searchCriteria {
-    border-bottom: 2px solid #333;
-    background: #eee;
-    color: #333;
-}
 
 #searchInput:focus, #searchCriteria:focus, #searchButton:focus, #resetSearchButton:focus {
     transform: scale(1.05);
@@ -520,50 +544,11 @@ button:hover {
     outline: none;
 }
 
-.download-section {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 250px;
-    margin: auto;
-}
-
-.download-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 10px;
-    background: #fff;
-    border-radius: 2px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease-in-out;
-    width: 70%;
-    margin: 15px auto;
-}
 
 .download-card:hover {
     transform: scale(1.05);
 }
 
-.download-buttons {
-    font-family: Roboto, monospace;
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    margin-top: 10px;
-}
-
-#downloadTxt, #downloadCsv {
-    padding: 10px;
-    border: none;
-    background: #333;
-    color: #fff;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: all 0.3s ease-in-out;
-    flex-grow: 1;
-    margin: 0 10px;
-}
 
 footer {
     font-family: 'Montserrat', sans-serif;

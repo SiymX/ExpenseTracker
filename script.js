@@ -13,9 +13,10 @@ const searchOption = document.getElementById('searchOption');
 const downloadsOption = document.getElementById('downloadsOption');
 
 searchOption.addEventListener('click', () => {
-  searchExpenses();
+  showSearchPrompt();
   menuPrompt.classList.remove('show');
 });
+
 
 downloadsOption.addEventListener('click', () => {
   menuPrompt.classList.remove('show');
@@ -276,7 +277,7 @@ document.getElementById('expenseButton').addEventListener('click', function(e) {
 
 document.getElementById('helpButton').addEventListener('click', function() {
   const prompt = document.createElement('div');
-  prompt.classList.add('prompt');
+  prompt.classList.add('help-prompt');
   prompt.innerHTML = `
     <h3>Expense Tracker Help</h3>
     <p>Welcome to Expense Tracker! This application helps you track your expenses.</p>
@@ -305,6 +306,52 @@ function removeBlur() {
   document.body.removeChild(overlay);
 
   document.getElementById('helpButton').classList.remove('clicked'); 
+}
+
+
+
+
+
+
+function showSearchPrompt() {
+  const prompt = document.createElement('div');
+  prompt.classList.add('search-prompt');
+  prompt.innerHTML = `
+    <h4>Search Expenses</h4>
+    <div class="input-section">
+      <label for="searchInput">Search:</label>
+      <input type="text" id="searchInput" placeholder="Search...">
+    </div>
+    <div class="input-section">
+      <label for="searchCriteria">Search Criteria:</label>
+      <select id="searchCriteria">
+        <option value="name">Name</option>
+        <option value="amount">Amount</option>
+        <option value="category">Category</option>
+        <option value="dueDate">Date</option>
+      </select>
+    </div>
+    <div class="input-section">
+      <button id="searchButton" onclick="searchExpenses()">Search</button>
+      <button id="resetSearchButton">Reset</button>
+    </div>
+    <button onclick="document.body.removeChild(this.parentNode); closeSearchPrompt()">Close</button>
+  `;
+ 
+  document.body.appendChild(prompt);
+
+  const searchButton = document.getElementById('searchButton');
+  searchButton.addEventListener('click', searchExpenses);
+
+  const resetSearchButton = document.getElementById('resetSearchButton');
+  resetSearchButton.addEventListener('click', resetSearch);
+}
+
+function closeSearchPrompt() {
+  const prompt = document.querySelector('.search-prompt');
+  if (prompt) {
+    document.body.removeChild(prompt);
+  }
 }
 
 function searchExpenses() {
@@ -474,7 +521,6 @@ function groupExpensesByMonthYear(expenses) {
 
   return Object.entries(groupedExpenses).map(([monthYear, expenses]) => ({ monthYear, expenses }));
 }
-
 
 
 
