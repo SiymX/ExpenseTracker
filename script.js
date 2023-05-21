@@ -12,16 +12,12 @@ menuButton.addEventListener('click', () => {
 const searchOption = document.getElementById('searchOption');
 const downloadsOption = document.getElementById('downloadsOption');
 
-searchOption.addEventListener('click', () => {
-  showSearchPrompt();
-  menuPrompt.classList.remove('show');
-});
 
+function handleDownloads() {
+  let downloadPrompt = document.getElementById('downloadPrompt');
+  downloadPrompt.style.display = 'block';
+}
 
-downloadsOption.addEventListener('click', () => {
-  menuPrompt.classList.remove('show');
-  
-});
 
 
 function getMonthYear(dueDate) {
@@ -174,9 +170,6 @@ function deleteExpense(index, monthYear) {
   }
 }
 
-
-
-
 function editExpense(index, monthYear) {
   const expense = monthlyExpenses[monthYear][index];
   document.getElementById('expenseName').value = expense.name;
@@ -309,10 +302,6 @@ function removeBlur() {
 }
 
 
-
-
-
-
 function showSearchPrompt() {
   const prompt = document.createElement('div');
   prompt.classList.add('search-prompt');
@@ -359,26 +348,151 @@ function searchExpenses() {
   const searchCriteria = document.getElementById('searchCriteria').value;
 
   const expenseCards = document.getElementsByClassName('expense-card');
-  Array.from(expenseCards).forEach((card) => {
-    const cardTitle = card.querySelector('.title').textContent.toLowerCase();
-    const cardAmount = card.querySelector('.amount').textContent.toLowerCase();
-    const monthYearCard = card.closest('.month-year-card');
 
-    if (
-      cardTitle.includes(searchInput) ||
-      cardAmount.includes(searchInput) ||
-      monthYearCard.querySelector('.month-year-label').textContent.toLowerCase().includes(searchInput)
-    ) {
+  
+  const menuPrompt = document.getElementById('menuPrompt');
+  menuPrompt.classList.remove('show');
+
+ 
+  closeSearchPrompt();
+
+  Array.from(expenseCards).forEach((card) => {
+    let textToMatch = '';
+
+    switch (searchCriteria) {
+      case 'name':
+        textToMatch = card.querySelector('.title').textContent.toLowerCase();
+        break;
+      case 'amount':
+        textToMatch = card.querySelector('.amount').textContent.split(' - ')[0].toLowerCase();
+        break;
+      case 'category':
+        textToMatch = card.querySelector('.category').textContent.toLowerCase();
+        break;
+      case 'dueDate':
+        textToMatch = card.querySelector('.due-date').textContent;
+        break;
+      default:
+        break;
+    }
+
+    if (textToMatch.includes(searchInput)) {
       card.style.display = 'block';
-      monthYearCard.style.display = 'block';
     } else {
       card.style.display = 'none';
-      const expandedCards = monthYearCard.getElementsByClassName('expense-card');
-      const visibleCards = Array.from(expandedCards).some((c) => c.style.display !== 'none');
-      monthYearCard.style.display = visibleCards ? 'block' : 'none';
+    }
+
+    const monthYearCard = card.closest('.month-year-card');
+    if (Array.from(monthYearCard.getElementsByClassName('expense-card')).some((c) => c.style.display !== 'none')) {
+      monthYearCard.style.display = 'block';
+    } else {
+      monthYearCard.style.display = 'none';
     }
   });
 }
+
+
+
+
+function resetSearch() {
+  document.getElementById('searchInput').value = '';
+
+  const expenseCards = document.getElementsByClassName('expense-card');
+  Array.from(expenseCards).forEach((card) => {
+    card.style.display = 'block';
+  });
+}
+
+
+document.getElementById("downloadsOption").addEventListener("click", function() {
+  document.getElementById('menuPrompt').classList.remove('show');
+  document.getElementById('downloadPrompt').style.display = 'block';
+});
+
+
+
+function createDownloadPrompt() {
+
+  const downloadPrompt = document.createElement('div');
+  downloadPrompt.id = 'downloadPrompt';
+  downloadPrompt.style.display = 'none'; 
+
+
+  downloadPrompt.innerHTML = `
+    <button id="downloadTxt">Download TXT</button>
+    <button id="downloadCsv">Download CSV</button>
+  `;
+
+ 
+  document.body.appendChild(downloadPrompt);
+
+ 
+  document.getElementById("downloadTxt").addEventListener("click", function() {
+    downloadTxt(expenses);
+  });
+  
+  document.getElementById("downloadCsv").addEventListener("click", function() {
+    downloadCsv(expenses);
+  });
+}
+
+
+createDownloadPrompt();
+
+
+function closeDownloadPrompt() {
+  const prompt = document.getElementById('downloadPrompt');
+  if (prompt) {
+    prompt.style.display = 'none';
+  }
+}
+
+
+
+function downloadTxt(data) {
+  let groupedExpenses = groupExpensesByMonthYear(data);
+
+  let txtData = groupedExpenses.map(group => {
+    let monthYear = group.monthYear;
+    let expenses = group.expenses.map(expense => `Name: ${expense.name}, Amount: ${expense.amount}, Category: ${expense.category}, Date: ${expense.dueDate}`).join('\n');
+    return `----------------------------------------------------------------------------------------------------------------------\nMONTH ${monthYear}\n${expenses}\n----------------------------------------------------------------------------------------------------------------------\n\n`;
+  }).join('\n');
+
+  let blob = new Blob([txtData], { type: 'text/plain' });
+  let url = window.URL.createObjectURL(blob);
+
+  let link = document.createElement('a');
+  link.download = 'expenses.txt';
+  link.href = url;
+  link.click();
+
+  closeDownloadPrompt();
+}
+
+function downloadCsv(data) {
+  let groupedExpenses = groupExpensesByMonthYear(data);
+
+  let csvData = groupedExpenses.map(group => {
+    let monthYear = group.monthYear;
+    let expenses = group.expenses.map(expense => {
+      let formattedDate = new Date(expense.dueDate).toISOString().split('T')[0]; 
+      return `${expense.name},${expense.amount},${expense.category},${formattedDate}`;
+    }).join('\n');
+    return `MONTH ${monthYear}\nName,Amount,Category,Date\n${expenses}\n\n`;
+  }).join('\n');
+
+  let blob = new Blob([csvData], { type: 'text/csv' });
+  let url = window.URL.createObjectURL(blob);
+
+  let link = document.createElement('a');
+  link.download = 'expenses.csv';
+  link.href = url;
+  link.click();
+
+  closeDownloadPrompt();
+}
+
+
 
 
 
@@ -448,62 +562,16 @@ function groupExpensesByMonthYear(expenses) {
 }
 
 
-
+/*
 function resetSearch() {
   document.getElementById('searchInput').value = '';
   loadExpenses();
 }
+*/
 
-document.getElementById("downloadTxt").addEventListener("click", function() {
-  downloadTxt(expenses);
-});
 
-document.getElementById("downloadCsv").addEventListener("click", function() {
-  downloadCsv(expenses);
-});
-
-function downloadTxt(data) {
-  
-  let groupedExpenses = groupExpensesByMonthYear(data);
 
   
-  let txtData = groupedExpenses.map(group => {
-    let monthYear = group.monthYear;
-    let expenses = group.expenses.map(expense => `Name: ${expense.name}, Amount: ${expense.amount}, Category: ${expense.category}, Date: ${expense.dueDate}`).join('\n');
-    return `----------------------------------------------------------------------------------------------------------------------\nMONTH ${monthYear}\n${expenses}\n----------------------------------------------------------------------------------------------------------------------\n\n`;
-  }).join('\n');
-
-  let blob = new Blob([txtData], { type: 'text/plain' });
-  let url = window.URL.createObjectURL(blob);
-
-  let link = document.createElement('a');
-  link.download = 'expenses.txt';
-  link.href = url;
-  link.click();
-}
-
-function downloadCsv(data) {
-  
-  let groupedExpenses = groupExpensesByMonthYear(data);
-
-  
-  let csvData = groupedExpenses.map(group => {
-    let monthYear = group.monthYear;
-    let expenses = group.expenses.map(expense => {
-      let formattedDate = new Date(expense.dueDate).toISOString().split('T')[0]; 
-      return `${expense.name},${expense.amount},${expense.category},${formattedDate}`;
-    }).join('\n');
-    return `MONTH ${monthYear}\nName,Amount,Category,Date\n${expenses}\n\n`;
-  }).join('\n');
-
-  let blob = new Blob([csvData], { type: 'text/csv' });
-  let url = window.URL.createObjectURL(blob);
-
-  let link = document.createElement('a');
-  link.download = 'expenses.csv';
-  link.href = url;
-  link.click();
-}
 
 
 function groupExpensesByMonthYear(expenses) {
@@ -524,6 +592,45 @@ function groupExpensesByMonthYear(expenses) {
 
 
 
+/*
+searchOption.addEventListener('click', () => {
+  showSearchPrompt();
+  menuPrompt.classList.remove('show');
+});
+*/
+
+/*
+downloadsOption.addEventListener('click', () => {
+  menuPrompt.classList.remove('show');
+  handleDownloads(); // Add this line
+});
+*/
 
 
+/*
+function searchExpenses() {
+  const searchInput = document.getElementById('searchInput').value.toLowerCase();
+  const searchCriteria = document.getElementById('searchCriteria').value;
 
+  const expenseCards = document.getElementsByClassName('expense-card');
+  Array.from(expenseCards).forEach((card) => {
+    const cardTitle = card.querySelector('.title').textContent.toLowerCase();
+    const cardAmount = card.querySelector('.amount').textContent.toLowerCase();
+    const monthYearCard = card.closest('.month-year-card');
+
+    if (
+      cardTitle.includes(searchInput) ||
+      cardAmount.includes(searchInput) ||
+      monthYearCard.querySelector('.month-year-label').textContent.toLowerCase().includes(searchInput)
+    ) {
+      card.style.display = 'block';
+      monthYearCard.style.display = 'block';
+    } else {
+      card.style.display = 'none';
+      const expandedCards = monthYearCard.getElementsByClassName('expense-card');
+      const visibleCards = Array.from(expandedCards).some((c) => c.style.display !== 'none');
+      monthYearCard.style.display = visibleCards ? 'block' : 'none';
+    }
+  });
+}
+*/
