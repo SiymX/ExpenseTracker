@@ -32,7 +32,7 @@ user-friendly interface to add, edit, and delete expenses, and organizes them by
 # Installation
 1. Clone the repository to your local machine:
 ```
-https://github.com/SiymX/ExpenseTracker.git
+git https://github.com/SiymX/ExpenseTracker.git
 ```
 
 
