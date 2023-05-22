@@ -273,12 +273,12 @@ document.getElementById('helpButton').addEventListener('click', function() {
   prompt.classList.add('help-prompt');
   prompt.innerHTML = `
     <h3>Expense Tracker Help</h3>
-    <p>Welcome to Expense Tracker! This application helps you track your expenses.</p>
-    <p>To add an expense, fill in the expense details and click the "Add Expense" button.</p>
-    <p>You can edit or delete an expense by clicking the buttons on each expense card.</p>
-    <p>The expenses lists are organized by month and year.</p>
-    <p>You can also download your expenses as a TXT or a CSV (Excel Sheet) file.</p>
-    <p>Thanks for using Expense Tracker!</p>
+    <p>■ Welcome to Expense Tracker! This application helps you track your expenses.</p>
+    <p>■ To add an expense, fill in the expense details and click the "Add Expense" button.</p>
+    <p>■ You can edit or delete an expense by clicking the buttons on each expense card.</p>
+    <p>■ The expenses lists are organized by month and year.</p>
+    <p>■ You can also download your expenses as a TXT or a CSV (Excel Sheet) file.</p>
+    <p>■ Thanks for using Expense Tracker!</p>
     <button onclick="document.body.removeChild(this.parentNode); removeBlur()">Close</button>
   `;
   document.body.appendChild(prompt);
@@ -343,64 +343,71 @@ function closeSearchPrompt() {
   }
 }
 
+function closeMenuPrompt() {
+  menuPrompt.classList.remove('show');
+}
+
 function searchExpenses() {
   const searchInput = document.getElementById('searchInput').value.toLowerCase();
   const searchCriteria = document.getElementById('searchCriteria').value;
 
   const expenseCards = document.getElementsByClassName('expense-card');
-
-  
   const menuPrompt = document.getElementById('menuPrompt');
   menuPrompt.classList.remove('show');
 
- 
   closeSearchPrompt();
 
   Array.from(expenseCards).forEach((card) => {
-    let textToMatch = '';
-
-    switch (searchCriteria) {
-      case 'name':
-        textToMatch = card.querySelector('.title').textContent.toLowerCase();
-        break;
-      case 'amount':
-        textToMatch = card.querySelector('.amount').textContent.split(' - ')[0].toLowerCase();
-        break;
-      case 'category':
-        textToMatch = card.querySelector('.category').textContent.toLowerCase();
-        break;
-      case 'dueDate':
-        textToMatch = card.querySelector('.due-date').textContent;
-        break;
-      default:
-        break;
-    }
-
-    if (textToMatch.includes(searchInput)) {
-      card.style.display = 'block';
-    } else {
-      card.style.display = 'none';
-    }
-
+    const cardTitle = card.querySelector('.title').textContent.toLowerCase();
+    const cardAmount = card.querySelector('.amount').textContent.toLowerCase();
     const monthYearCard = card.closest('.month-year-card');
-    if (Array.from(monthYearCard.getElementsByClassName('expense-card')).some((c) => c.style.display !== 'none')) {
+
+    if (
+      cardTitle.includes(searchInput) ||
+      cardAmount.includes(searchInput) ||
+      monthYearCard.querySelector('.month-year-label').textContent.toLowerCase().includes(searchInput)
+    ) {
+      card.style.display = 'block';
       monthYearCard.style.display = 'block';
     } else {
-      monthYearCard.style.display = 'none';
+      card.style.display = 'none';
+      const expandedCards = monthYearCard.getElementsByClassName('expense-card');
+      const visibleCards = Array.from(expandedCards).some((c) => c.style.display !== 'none');
+      monthYearCard.style.display = visibleCards ? 'block' : 'none';
     }
   });
+  document.getElementById('resetSearchButton').style.display = 'block';
 }
 
 
 
 
+
 function resetSearch() {
+  menuPrompt.classList.remove('show');
+  
+  document.getElementById('resetSearchButton').style.display = 'none';
+
+  const monthYearCards = document.getElementsByClassName('month-year-card');
+  Array.from(monthYearCards).forEach((card) => {
+    card.style.display = 'block';
+    const expenseCards = card.getElementsByClassName('expense-card');
+    Array.from(expenseCards).forEach((expenseCard) => {
+      expenseCard.style.display = 'block';
+    });
+    
+  });
+  document.getElementById('searchInput').value = '';
+
+  /*
   document.getElementById('searchInput').value = '';
 
   const expenseCards = document.getElementsByClassName('expense-card');
   Array.from(expenseCards).forEach((card) => {
     card.style.display = 'block';
+   
   });
+  */
 }
 
 

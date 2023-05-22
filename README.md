@@ -53,9 +53,9 @@ https://github.com/SiymX/ExpenseTracker.git
 
 # Future Planning
 This application will be updated constantly with some new features and enhances but right now there are plans to add the following:
+- Expense Search Feature to find expenses by year, category, etc. (COMPLETED 5/21/2023 at 90%)
 - Expense Categories Retractable Windows. (COMPLETED 5/17/2023 at 83%)
-- Expense Search Feature to find expenses by year, category, etc. (IN PROGRESS 55%)
-- Expense Sorting and Filtering.
 - Expense Export as a CSV or TXT file. (COMPLETED 5/16/2023)
+- Expense Sorting and Filtering.
 - Budget Tracking.
 - Graphics Overhaul.
