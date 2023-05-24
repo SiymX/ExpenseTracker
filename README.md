@@ -1,3 +1,6 @@
+![expenseGIT](https://github.com/SiymX/ExpenseTracker/assets/63435885/4041deb4-4721-4691-86b1-002412c5102c)
+
+
 # ExpenseTracker
 This program is a JavaScript Web Application that allows user to track their expenses easily. It provides a 
 user-friendly interface to add, edit, and delete expenses, and organizes them by month and year for better management.
