@@ -50,6 +50,7 @@ git https://github.com/SiymX/ExpenseTracker.git
 3. Access to edit an existing expense, click the edit button which is represented by the pencil icon on the expense card and then Update the details then click "Update Expense" to save the changes.
 4. Deleting an expense by clicking on the delete button which is represented by the trash icon on the expense card.
 5. A monthly summary will be display the Total Expense for each month, providing an overview of your spending habits.
+6. Expense Export as a CSV or TXT file.
 
 
 
@@ -58,7 +59,6 @@ git https://github.com/SiymX/ExpenseTracker.git
 This application will be updated constantly with some new features and enhances but right now there are plans to add the following:
 - Expense Search Feature to find expenses by year, category, etc. (COMPLETED 5/21/2023 at 90%)
 - Expense Categories Retractable Windows. (COMPLETED 5/17/2023 at 83%)
-- Expense Export as a CSV or TXT file. (COMPLETED 5/16/2023)
 - Expense Sorting and Filtering.
 - Budget Tracking.
 - Graphics Overhaul.
